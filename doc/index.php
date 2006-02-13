@@ -8,11 +8,11 @@
 
 <h2>CWautomacros: a collection of autoconf m4 macros by Carlo Wood</h2>
 
-<p>There is no documentation or tar ball (yet).</p>
+<p>There is no documentation (yet).</p>
 
 <p>If you have downloaded a project that sent you here, then
-please get the sources with <a href="http://developer.berlios.de/cvs/?group_id=6077">Anonymous CVS Access</a>,
-then simply run 'make install' to install.</p>
+get the sources with <a href="http://developer.berlios.de/cvs/?group_id=6077">Anonymous CVS Access</a>,
+or download the latest <a href="http://developer.berlios.de/project/showfiles.php?group_id=6077">tar ball</a>.</p>
 
 </body>
 </html>
