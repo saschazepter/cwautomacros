@@ -17,13 +17,6 @@ if test ! -f autogen.sh; then
   exit 1
 fi
 
-# Clueless user check.
-if test ! -d CVS -a -f configure; then
-  echo "You only need to run './autogen.sh' when you checked out this project using CVS."
-  echo "Just run ./configure [--help]."
-  exit 0
-fi
-
 # Demand we use configure.ac.
 if test ! -f configure.ac; then
   if test -f configure.in; then
@@ -212,10 +205,11 @@ if ! grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am >/dev/null; th
   exit 1
 fi
 
-ACLOCAL_AMFLAGS=`grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am | sed -e 's/^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=[[:space:]]*//'`
+ACLOCAL_AMFLAGS=`grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am | sed -e 's/^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=[[:space:]]*//' -e 's%@ACLOCAL_CWFLAGS@%-I @INSTALLPREFIX@/share/cwautomacros/m4%g'`
 
-if ! echo "$ACLOCAL_AMFLAGS" | grep -- '-I /usr/share/cwautomacros' >/dev/null; then
-  echo "ACLOCAL_AMFLAGS, in Makefile.am, should contain \"-I /usr/share/cwautomacros\""
+if ! echo "$ACLOCAL_AMFLAGS" | grep -- '-I @INSTALLPREFIX@/share/cwautomacros/m4' >/dev/null; then
+  echo "*** WARNING: ACLOCAL_AMFLAGS, in Makefile.am, should contain \"-I @INSTALLPREFIX@/share/cwautomacros/m4\""
+  echo "***          You can achieve this by adding ACLOCAL_AMFLAGS=@ACLOCAL_CWFLAGS@ to Makefile.am."
 fi
 
 run "$ACLOCAL $ACLOCAL_AMFLAGS"

@@ -8,8 +8,13 @@ if test ! -d CVS -a ! -d .svn -a -f configure; then
   exit 0
 fi
 
-if test ! -f /usr/share/cwautomacros/autogen.sh; then
-  echo "This project needs 'cwautomacros'. See http://cwautomacros.berlios.de/"
+# Installation prefix. This has to match what was used while installing cwautomacros of course.
+PREFIX=${CWAUTOMACROSPREFIX-/usr}
+
+if test ! -f $PREFIX/share/cwautomacros/scripts/autogen.sh; then
+  echo "$0: $PREFIX/share/cwautomacros/scripts/autogen.sh: No such file or directory"
+  echo "$0: This project needs 'cwautomacros'. See http://cwautomacros.berlios.de/"
+  exit 126
 fi
 
-exec /usr/share/cwautomacros/autogen.sh
+exec $PREFIX/share/cwautomacros/scripts/autogen.sh
