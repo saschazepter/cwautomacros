@@ -1,0 +1,24 @@
+# Maintainer script (to make a new release).
+
+label="`date +%Y%m%d`"
+name="cwautomacros-$label"
+mkdir "$name" || exit 1
+cvsdirs="`find . -type d -name CVS -print`"
+dirs="`for d in $cvsdirs; do dirname $d; done`"
+for d in $dirs; do
+  mkdir -p "$name/$d"
+  files="`grep '^/' $d/CVS/Entries | sed -e 's%^/\([^/]*\)/.*%'$d'/\1%'`"
+  for f in $files; do
+    cp "$f" "$name/$d"
+  done
+done
+tar cjf "$name".tar.bz2 "$name"
+rm -rf "$name"
+
+scp doc/index.php cwautomacros:doc
+
+echo "http://developer.berlios.de/project/admin/qrs.php?package_id=&group_id=6077"
+echo "Release Name: $label"
+echo "File Type: Source .bz2"
+echo "Processor Type: Any"
+echo "Upload file: `pwd`/$name.tar.bz2"

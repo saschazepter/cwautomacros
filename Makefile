@@ -23,3 +23,4 @@ install:
 	done
 	install -d $(INSTALLPREFIX)/share/cwautomacros/templates
 	install --mode 755 templates/*.sh $(INSTALLPREFIX)/share/cwautomacros/templates
+
