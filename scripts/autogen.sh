@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 
 # Helps bootstrapping the application when checked out from CVS.
 # Requires GNU autoconf, GNU automake and GNU which.
@@ -217,6 +217,9 @@ run "$AUTOHEADER"
 run "$AUTOCONF"
 if test "$using_libtool" = "yes"; then
 run "libtoolize --automake $libtoolize_arguments"
+fi
+if test ! -e depcomp; then
+  ln -s @INSTALLPREFIX@/share/cwautomacros/scripts/depcomp.sh depcomp
 fi
 run "$AUTOMAKE --add-missing --foreign"
 

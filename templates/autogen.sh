@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 
 # Clueless user check.
 if test ! -d CVS -a ! -d .svn -a -f configure; then
