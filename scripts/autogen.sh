@@ -228,6 +228,6 @@ project_name=`basename "$PWD"`
 if test -n "$CONFIGURE_OPTIONS"; then
   echo 'Now you can do `mkdir ../'$project_name'-objdir; cd ../'$project_name'-objdir; configure'
 else
-  echo 'Now you can do `mkdir ../'$project_name'-objdir; cd ../'$project_name'-objdir; ../'$project_name'/configure --enable-maintainer-mode --enable-debug [--help]'"'"'.'
+  echo 'Now you can do `mkdir ../'$project_name'-objdir; cd ../'$project_name'-objdir; ../'$project_name'/configure --enable-maintainer-mode [--help]'"'"'.'
 fi
 
