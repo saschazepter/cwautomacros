@@ -31,7 +31,7 @@ dnl typedef getgroups_t instead of defining the macro GETGROUPS_T.
 AC_DEFUN([CW_TYPE_GETGROUPS],
 [AC_REQUIRE([AC_TYPE_UID_T])dnl
 AC_CACHE_CHECK(type of array argument to getgroups, ac_cv_type_getgroups,
-[CW_TRY_RUN(
+[AC_TRY_RUN(
 changequote(<<, >>)dnl
 <<
 /* Thanks to Mike Rendell for this test.  */

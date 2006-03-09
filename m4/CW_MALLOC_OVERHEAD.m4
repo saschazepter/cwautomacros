@@ -24,9 +24,6 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwautomacros project.
 
-dnl This is here to notify the user that also CW_TRY_RUN.m4 should be included.
-m4_pattern_forbid(CW_TRY_RUN)
-
 dnl CW_MALLOC_OVERHEAD
 dnl
 dnl Defines CW_SYS_MALLOC_OVERHEAD to be the number of bytes extra
@@ -34,7 +31,7 @@ dnl allocated for a call to malloc.
 dnl
 AC_DEFUN([CW_MALLOC_OVERHEAD],
 [AC_CACHE_CHECK(malloc overhead in bytes, cw_cv_system_mallocoverhead,
-[CW_TRY_RUN([#include <cstddef>
+[AC_TRY_RUN([#include <cstddef>
 #include <cstdlib>
 
 bool bulk_alloc(size_t malloc_overhead_attempt, size_t size)

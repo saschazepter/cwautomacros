@@ -30,7 +30,7 @@ dnl Defines LIBCWD_NEED_WORD_ALIGNMENT when the host needs
 dnl respectively size_t alignment or not.
 AC_DEFUN([CW_NEED_WORD_ALIGNMENT],
 [AC_CACHE_CHECK(if machine needs word alignment, cw_cv_system_needwordalignment,
-[CW_TRY_RUN([#include <cstddef>
+[AC_TRY_RUN([#include <cstddef>
 #include <cstdlib>
 
 int main(void)
