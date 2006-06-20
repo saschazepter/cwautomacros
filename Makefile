@@ -16,11 +16,11 @@ all:
 install:
 	install -d $(INSTALLPREFIX)/share/cwautomacros
 	install -d $(INSTALLPREFIX)/share/cwautomacros/m4
-	install --mode 644 m4/*.m4 $(INSTALLPREFIX)/share/cwautomacros/m4
+	install -m 644 m4/*.m4 $(INSTALLPREFIX)/share/cwautomacros/m4
 	install -d $(INSTALLPREFIX)/share/cwautomacros/scripts
 	for scripts in `ls scripts/*.sh`; do \
 	  sed -e 's^@INSTALLPREFIX@^$(INSTALLPREFIX)^g' $$scripts > $(INSTALLPREFIX)/share/cwautomacros/$$scripts; \
 	done
 	install -d $(INSTALLPREFIX)/share/cwautomacros/templates
-	install --mode 755 templates/*.sh $(INSTALLPREFIX)/share/cwautomacros/templates
+	install -m 755 templates/*.sh $(INSTALLPREFIX)/share/cwautomacros/templates
 
