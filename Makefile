@@ -20,6 +20,7 @@ install:
 	install -d $(INSTALLPREFIX)/share/cwautomacros/scripts
 	for scripts in `ls scripts/*.sh`; do \
 	  sed -e 's^@INSTALLPREFIX@^$(INSTALLPREFIX)^g' $$scripts > $(INSTALLPREFIX)/share/cwautomacros/$$scripts; \
+	  chmod 755 $(INSTALLPREFIX)/share/cwautomacros/$$scripts; \
 	done
 	install -d $(INSTALLPREFIX)/share/cwautomacros/templates
 	install -m 755 templates/*.sh $(INSTALLPREFIX)/share/cwautomacros/templates
