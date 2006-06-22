@@ -54,7 +54,7 @@ if test ! -f ./autogen_versions; then
   exit 1
 fi
 
-source ./autogen_versions
+. ./autogen_versions
 
 if test "$using_libtool" = "yes"; then
   if test x"$required_libtool_version" = x; then
