@@ -72,12 +72,14 @@ GETEXT=${GETEXT:-gettext}
 ACLOCAL=${ACLOCAL:-aclocal}
 AUTOHEADER=${AUTOHEADER:-autoheader}
 AUTOCONF=${AUTOCONF:-autoconf}
+LIBTOOL=${LIBTOOL:-libtool}
+LIBTOOLIZE=${LIBTOOLIZE:-`echo $LIBTOOL | sed -e 's/libtool/libtoolize/'`}
 
 # Sanity checks.
 ($AUTOCONF --version) >/dev/null 2>/dev/null || (echo "Cannot find '$AUTOCONF'. You need GNU autoconf to install from CVS (ftp://ftp.gnu.org/gnu/autoconf/)"; exit 1) || exit 1
 ($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo "Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/automake/)"; exit 1) || exit 1
 if test $using_libtool = "yes"; then
-  (libtool --version) >/dev/null 2>/dev/null || (echo "Cannot find 'libtool'. You need GNU libtool $required_libtool_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/libtool/)"; exit 1) || exit 1
+  ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo "Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/libtool/)"; exit 1) || exit 1
 fi
 
 # Determine the version of automake.
@@ -98,14 +100,14 @@ fi
 if test "$using_libtool" = "yes"; then
 
   # Determine the version of libtool.
-  libtool_version=`libtool --version | head -n 1 | sed -e 's/[^12]*\([12]\.[0-9][^ ]*\).*/\1/'`
-  libtool_develversion=`libtool --version | head -n 1 | sed -e 's/.*[12]\.[0-9].*(\([^ ]*\).*/\1/'`
+  libtool_version=`$LIBTOOL --version | head -n 1 | sed -e 's/[^12]*\([12]\.[0-9][^ ]*\).*/\1/'`
+  libtool_develversion=`$LIBTOOL --version | head -n 1 | sed -e 's/.*[12]\.[0-9].*(\([^ ]*\).*/\1/'`
 
   # Require required_libtool_version.
   expr_libtool_version=`echo "$libtool_version" | sed -e 's%\.%.000%g' -e 's%^%000%' -e 's%0*\([0-9][0-9][0-9]\)%\1%g'`
   expr_required_libtool_version=`echo "$required_libtool_version" | sed -e 's%\.%.000%g' -e 's%^%000%' -e 's%0*\([0-9][0-9][0-9]\)%\1%g'`
   if expr "$expr_required_libtool_version" \> "$expr_libtool_version" >/dev/null; then
-    libtool --version
+    $LIBTOOL --version
     echo ""
     echo "Fatal error: libtool version $required_libtool_version or higher is required."
     exit 1
@@ -216,7 +218,7 @@ run "$ACLOCAL $ACLOCAL_AMFLAGS"
 run "$AUTOHEADER"
 run "$AUTOCONF"
 if test "$using_libtool" = "yes"; then
-run "libtoolize --automake $libtoolize_arguments"
+run "$LIBTOOLIZE --automake $libtoolize_arguments"
 fi
 if test ! -e depcomp; then
   ln -s @INSTALLPREFIX@/share/cwautomacros/scripts/depcomp.sh depcomp
