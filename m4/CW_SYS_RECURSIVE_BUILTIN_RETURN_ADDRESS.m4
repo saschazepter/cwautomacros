@@ -40,8 +40,12 @@ cw_cv_sys_recursive_builtin_return_address=unknown)
 AC_LANG_RESTORE])
 if test "$cw_cv_sys_recursive_builtin_return_address" = "no"; then
 CW_CONFIG_RECURSIVE_BUILTIN_RETURN_ADDRESS=undef
+cw_recursive_builtin_return_address=0
 else
 CW_CONFIG_RECURSIVE_BUILTIN_RETURN_ADDRESS=define
+cw_recursive_builtin_return_address=1
 fi
 AC_SUBST(CW_CONFIG_RECURSIVE_BUILTIN_RETURN_ADDRESS)
+AC_DEFINE_UNQUOTED([CW_RECURSIVE_BUILTIN_RETURN_ADDRESS], $cw_recursive_builtin_return_address,
+    [Define when __builtin_return_address accepts arguments larger than 0.])
 ])
