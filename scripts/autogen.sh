@@ -68,7 +68,7 @@ if test x"$required_automake_version" = x; then
 fi
 
 AUTOMAKE=${AUTOMAKE:-automake}
-GETEXT=${GETEXT:-gettext}
+GETTEXT=${GETTEXT:-gettext}
 ACLOCAL=${ACLOCAL:-aclocal}
 AUTOHEADER=${AUTOHEADER:-autoheader}
 AUTOCONF=${AUTOCONF:-autoconf}
@@ -78,8 +78,14 @@ LIBTOOLIZE=${LIBTOOLIZE:-`echo $LIBTOOL | sed -e 's/libtool/libtoolize/'`}
 # Sanity checks.
 ($AUTOCONF --version) >/dev/null 2>/dev/null || (echo "Cannot find '$AUTOCONF'. You need GNU autoconf to install from CVS (ftp://ftp.gnu.org/gnu/autoconf/)"; exit 1) || exit 1
 ($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo "Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/automake/)"; exit 1) || exit 1
+($ACLOCAL --version) >/dev/null 2>/dev/null || (echo "Cannot find '$ACLOCAL'. Please set the correct environment variable (ACLOCAL)."; exit 1) || exit 1
+($AUTOHEADER --version) >/dev/null 2>/dev/null || (echo "Cannot find '$AUTOHEADER'. Please set the correct environment variable (AUTOHEADER)."; exit 1) || exit 1
 if test $using_libtool = "yes"; then
   ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo "Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/libtool/)"; exit 1) || exit 1
+  ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo "Cannot find '$LIBTOOLIZE'. Please set the correct environment variable."; exit 1) || exit 1
+fi
+if test "$using_gettest" = "yes"; then
+  ($GETTEXT --version) >/dev/null 2>/dev/null || (echo "Cannot find '$GETTEXT'. Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
 fi
 
 # Determine the version of automake.
@@ -118,7 +124,7 @@ fi # using_libtool
 if test "$using_gettest" = "yes"; then
 
   # Determine version of gettext.
-  gettext_version=`$GETEXT --version | head -n 1 | sed -e 's/[^0]*\(0\.[0-9][^ ]*\).*/\1/'`
+  gettext_version=`$GETTEXT --version | head -n 1 | sed -e 's/[^0]*\(0\.[0-9][^ ]*\).*/\1/'`
   confver=`cat configure.ac | grep '^AM_GNU_GETTEXT_VERSION(' | sed -e 's/^AM_GNU_GETTEXT_VERSION(\([^()]*\))/\1/p' | sed -e 's/^\[\(.*\)\]$/\1/' | sed -e 1q`
 
   # Require version as specified in configure.ac.
@@ -127,7 +133,7 @@ if test "$using_gettest" = "yes"; then
   if expr "$expr_confver" \> "$expr_gettext_version" >/dev/null; then
     $GETTEXT --version | head -n 1
     echo ""
-    echo "Fatal error: gettext version "$confver" or higher is required. Please set \$GETEXT"
+    echo "Fatal error: gettext version "$confver" or higher is required. Please set \$GETTEXT"
     echo "to point to a newer gettext, or upgrade."
     echo ""
     exit 1
