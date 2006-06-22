@@ -33,16 +33,16 @@ set for this tool to work. The following environment variables are used by the '
 <li><code>GETTEXT</code> - the gettext executable to use (default: gettext).
 </ul>
 
-<p>For example, on FreeBSD you'd could add something like the following to your <code>~/.profile</code>:</p>
+<p>On FreeBSD one could add something like the following to <code>~/.profile</code>, for example:</p>
 
-<code>
+<pre>
 export CWAUTOMACROSPREFIX=$HOME
 export AUTOCONF=autoconf259
 export AUTOHEADER=autoheader259
 export AUTOMAKE=automake19
 export ACLOCAL=aclocal19
 export LIBTOOL=libtool15
-</code>
+</pre>
 
 </body>
 </html>
