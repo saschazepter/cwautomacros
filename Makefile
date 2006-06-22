@@ -16,6 +16,7 @@ all:
 install:
 	install -d $(INSTALLPREFIX)/share/cwautomacros
 	install -d $(INSTALLPREFIX)/share/cwautomacros/m4
+	rm -f $(INSTALLPREFIX)/share/cwautomacros/m4/*.m4
 	install -m 644 m4/*.m4 $(INSTALLPREFIX)/share/cwautomacros/m4
 	install -d $(INSTALLPREFIX)/share/cwautomacros/scripts
 	for scripts in `ls scripts/*.sh`; do \
