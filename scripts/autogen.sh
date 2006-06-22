@@ -151,6 +151,7 @@ if test "$using_libtool" = "yes"; then
     need_copy="yes"
   fi
   if test "$need_copy" = "yes"; then
+    test -d libtoolm4 && rm -f libtoolm4/libtool*
     mkdir -p libtoolm4 && cp $libtool_m4 libtoolm4
     ACLOCAL_LTFLAGS=${ACLOCAL_LTFLAGS:--I libtoolm4}
   fi
