@@ -151,7 +151,8 @@ if test "$using_libtool" = "yes"; then
     need_copy="yes"
   fi
   if test "$need_copy" = "yes"; then
-    mkdir -p m4 && cp $libtool_m4 m4
+    mkdir -p libtoolm4 && cp $libtool_m4 libtoolm4
+    ACLOCAL_LTFLAGS=${ACLOCAL_LTFLAGS:--I libtoolm4}
   fi
 
 fi # using_libtool
@@ -255,7 +256,7 @@ if ! echo "$ACLOCAL_AMFLAGS" | grep -- '-I @INSTALLPREFIX@/share/cwautomacros/m4
   echo "***          You can achieve this by adding ACLOCAL_AMFLAGS=@ACLOCAL_CWFLAGS@ to Makefile.am."
 fi
 
-run "$ACLOCAL $ACLOCAL_AMFLAGS"
+run "$ACLOCAL $ACLOCAL_AMFLAGS $ACLOCAL_LTFLAGS"
 run "$AUTOHEADER"
 run "$AUTOCONF"
 if test "$using_libtool" = "yes"; then
