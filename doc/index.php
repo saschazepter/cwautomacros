@@ -19,5 +19,30 @@ or download the latest <a href="http://developer.berlios.de/project/showfiles.ph
 (or in <code>$CWAUTOMACROSPREFIX/share/cwautomacros</code> if you set that environment variable).
 After installation, simply go back to the project that sent you here and (re-)run it's `autogen.sh' script.</p>
 
+<h4>Environment variables</h4>
+<p>Apart from <code>CWAUTOMACROSPREFIX</code>, several other environment variables might need to be
+set for this tool to work. The following environment variables are used by the 'autogen.sh' script:</p>
+
+<ul>
+<li><code>AUTOMAKE</code> - the automake executable to use (default: automake).
+<li><code>ACLOCAL</code> - the aclocal executable to use (default: aclocal).
+<li><code>AUTOCONF</code> - the autoconf executable to use (default: autoconf).
+<li><code>AUTOHEADER</code> - the autoheader executable to use (default: autoheader).
+<li><code>LIBTOOL</code> - the libtool executable to use (default: libtool).
+<li><code>LIBTOOLIZE</code> - the libtoolize executable to use (default: $LIBTOOL where 'libtool' is replaced with 'libtoolize').
+<li><code>GETTEXT</code> - the gettext executable to use (default: gettext).
+</ul>
+
+<p>For example, on FreeBSD you'd could add something like the following to your <code>~/.profile</code>:</p>
+
+<code>
+export CWAUTOMACROSPREFIX=$HOME
+export AUTOCONF=autoconf259
+export AUTOHEADER=autoheader259
+export AUTOMAKE=automake19
+export ACLOCAL=aclocal19
+export LIBTOOL=libtool15
+</code>
+
 </body>
 </html>

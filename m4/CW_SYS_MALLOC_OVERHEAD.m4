@@ -1,4 +1,4 @@
-# CW_MALLOC_OVERHEAD m4 macro -- this file is part of cwautomacros.
+# CW_SYS_MALLOC_OVERHEAD m4 macro -- this file is part of cwautomacros.
 # Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -24,12 +24,12 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwautomacros project.
 
-dnl CW_MALLOC_OVERHEAD
+dnl CW_SYS_MALLOC_OVERHEAD
 dnl
-dnl Defines CW_SYS_MALLOC_OVERHEAD to be the number of bytes extra
+dnl Defines CW_MALLOC_OVERHEAD to be the number of bytes extra
 dnl allocated for a call to malloc.
 dnl
-AC_DEFUN([CW_MALLOC_OVERHEAD],
+AC_DEFUN([CW_SYS_MALLOC_OVERHEAD],
 [AC_CACHE_CHECK(malloc overhead in bytes, cw_cv_system_mallocoverhead,
 [AC_TRY_RUN([#include <cstddef>
 #include <cstdlib>
@@ -74,6 +74,7 @@ cw_cv_system_mallocoverhead=$?,
     cw_cv_system_mallocoverhead=4 dnl Guess a default for cross compiling
     ;;
 esac])])
-eval "CW_SYS_MALLOC_OVERHEAD=$cw_cv_system_mallocoverhead"
-AC_SUBST(CW_SYS_MALLOC_OVERHEAD)
+eval "CW_MALLOC_OVERHEAD=$cw_cv_system_mallocoverhead"
+AC_SUBST(CW_MALLOC_OVERHEAD)
+AC_DEFINE_UNQUOTED([CW_MALLOC_OVERHEAD], $cw_cv_system_mallocoverhead, [The overhead in bytes of malloc(3).])
 ])
