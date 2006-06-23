@@ -57,7 +57,7 @@ pch)
       shift
     done
     shift
-    if expr match "$1" "--" >/dev/null; then
+    if expr "$1" : "--" >/dev/null; then
       shift
     fi
   fi
