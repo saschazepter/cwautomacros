@@ -36,7 +36,7 @@ fi
 
 # Determine if this project uses gettext.
 if grep '^[[:space:]]*AM_GNU_GETTEXT_VERSION' configure.ac >/dev/null; then
-  using_getext="yes"
+  using_gettext="yes"
 else
   using_gettext="no"
 fi
@@ -84,7 +84,7 @@ if test $using_libtool = "yes"; then
   ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo "Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/libtool/)"; exit 1) || exit 1
   ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo "Cannot find '$LIBTOOLIZE'. Please set the correct environment variable."; exit 1) || exit 1
 fi
-if test "$using_gettest" = "yes"; then
+if test "$using_gettext" = "yes"; then
   ($GETTEXT --version) >/dev/null 2>/dev/null || (echo "Cannot find '$GETTEXT'. Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
 fi
 
@@ -158,7 +158,7 @@ if test "$using_libtool" = "yes"; then
 
 fi # using_libtool
 
-if test "$using_gettest" = "yes"; then
+if test "$using_gettext" = "yes"; then
 
   # Determine version of gettext.
   gettext_version=`$GETTEXT --version | head -n 1 | sed -e 's/[^0]*\(0\.[0-9][^ ]*\).*/\1/'`
