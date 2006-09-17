@@ -106,7 +106,7 @@ fi
 if test "$using_libtool" = "yes"; then
 
   # Determine the version of libtool.
-  libtool_version=`$LIBTOOL --version | head -n 1 | sed -e 's/[^12]*\([12]\.[0-9][^ ]*\).*/\1/'`
+  libtool_version=`$LIBTOOL --version | head -n 1 | sed -r -e 's/([^12]|[12][^.])*([12]\.[0-9]+(\.[0-9]+)*).*/\2/'`
   libtool_develversion=`$LIBTOOL --version | head -n 1 | sed -e 's/.*[12]\.[0-9].*(\([^ ]*\).*/\1/'`
 
   # Require required_libtool_version.
@@ -226,7 +226,7 @@ if test "$using_libtool" = "yes"; then
 
   # Check if bootstrap was run before and if the installed files are the same version.
   if test -f ltmain.sh; then
-    installed_libtool=`grep '^VERSION=' ltmain.sh | sed -e 's/.*\([12]\.[^ ]*\).*/\1/'`
+    installed_libtool=`grep '^VERSION=' ltmain.sh | sed -r -e 's/([^12]|[12][^.])*([12]\.[0-9]+(\.[0-9]+)*).*/\2/'`
     installed_timestamp=`grep '^TIMESTAMP=' ltmain.sh | sed -e 's/.*(\([0-9]*\.[^ ]*\).*/\1/'`
     if test "$installed_libtool" != "$libtool_version" -o X"$installed_timestamp" != X"$libtool_develversion"; then
       echo "Re-installing new libtool files ($installed_libtool ($installed_timestamp) -> $libtool_version ($libtool_develversion))"

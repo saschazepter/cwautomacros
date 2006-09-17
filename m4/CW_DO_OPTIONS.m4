@@ -27,20 +27,6 @@
 dnl CW_DO_OPTIONS
 dnl Chose reasonable default values for WARNOPTS, DEBUGOPTS and EXTRAOPTS
 AC_DEFUN([CW_DO_OPTIONS], [dnl
-dnl Choose warning options to use
-if test "$USE_MAINTAINER_MODE" = yes; then
-AC_EGREP_CPP(Winline-broken,
-[#if __GNUC__ < 3
-Winline-broken
-#endif
-],
-WARNOPTS="-Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Werror",
-WARNOPTS="-Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Werror -Winline")
-else
-WARNOPTS=
-fi
-AC_SUBST(WARNOPTS)
-
 dnl Stop automake from adding the `-I. -I. -I.' nonsense
 AC_SUBST(DEFS)
 
@@ -66,6 +52,25 @@ elif test x"$cw_config_optimization" != x"no"; then
   EXTRAOPTS="-O3"
 fi
 AC_SUBST(EXTRAOPTS)
+
+dnl Choose warning options to use
+if test "$USE_MAINTAINER_MODE" = yes; then
+AC_EGREP_CPP(Winline-broken,
+[#if __GNUC__ < 3
+Winline-broken
+#endif
+],
+WARNOPTS="-Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Werror",
+if test x"$EXTRAOPTS" = x"-O3"; then
+WARNOPTS="-Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Winline"
+else
+WARNOPTS="-Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Werror -Winline"
+fi
+)
+else
+WARNOPTS=
+fi
+AC_SUBST(WARNOPTS)
 
 dnl Test options
 TESTOPTS=""

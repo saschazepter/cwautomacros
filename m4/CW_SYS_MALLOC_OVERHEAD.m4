@@ -76,5 +76,6 @@ cw_cv_system_mallocoverhead=$?,
 esac])])
 eval "CW_MALLOC_OVERHEAD=$cw_cv_system_mallocoverhead"
 AC_SUBST(CW_MALLOC_OVERHEAD)
+m4_pattern_allow(CW_MALLOC_OVERHEAD)
 AC_DEFINE_UNQUOTED([CW_MALLOC_OVERHEAD], $cw_cv_system_mallocoverhead, [The overhead in bytes of malloc(3).])
 ])
