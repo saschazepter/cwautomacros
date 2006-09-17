@@ -42,7 +42,7 @@ extern "C" int getgroups(size_t, gid_t*);
 #define NGID 256
 #undef MAX
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
-main()
+int main()
 {
   gid_t gidset[NGID];
   int i, n;
@@ -54,7 +54,7 @@ main()
   n = getgroups (sizeof (gidset) / MAX (sizeof (int), sizeof (gid_t)) - 1, gidset);
   /* Exit non-zero if getgroups seems to require an array of ints.  This
      happens when gid_t is short but getgroups modifies an array of ints.  */
-  exit ((n > 0 && gidset[n] != val.gval) ? 1 : 0);
+  return (n > 0 && gidset[n] != val.gval) ? 1 : 0;
 }
 >>,
 changequote([, ])dnl
