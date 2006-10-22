@@ -44,7 +44,7 @@
 # `cw_used_libcwd' to "yes" when it is detected, "no" otherwise.
 #
 # The default ACTION_IF_FOUND is, if WANTED is unequal "no",
-# to update CXXFLAGS and LIBS.
+# to update CXXFLAGS and CWD_LIBS.
 #
 # The default ACTION-IF-NOT-FOUND is to print an error message;
 # ACTION-IF-NOT-FOUND is only executed when WANTED is "yes" and no
@@ -62,7 +62,7 @@ else
   AC_LANG_SAVE
   AC_LANG_CPLUSPLUS
   cw_save_LIBS="$LIBS"
-  LIBS="`pkg-config --libs lib$cw_libname` $LIBS"
+  LIBS="$LIBS `pkg-config --libs lib$cw_libname`"
   AC_LINK_IFELSE([AC_LANG_CALL([], [__libcwd_version])], [cw_cv_lib_libcwd=yes], [cw_cv_lib_libcwd=no])
   LIBS="$cw_save_LIBS"
   AC_LANG_RESTORE])
@@ -79,8 +79,9 @@ else
     else
       cw_used_libcwd=yes
       m4_default([$4], [dnl
-      CXXFLAGS="`pkg-config --cflags lib$cw_libname` $CXXFLAGS"
-      LIBS="$LIBS `pkg-config --libs lib$cw_libname`"])
+      CXXFLAGS="$CXXFLAGS `pkg-config --cflags lib$cw_libname`"
+      CWD_LIBS="`pkg-config --libs lib$cw_libname`"])
+      AC_SUBST(CWD_LIBS)
     fi
   else
     cw_used_libcwd=no
