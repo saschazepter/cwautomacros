@@ -38,7 +38,7 @@ AC_CACHE_CHECK([if libxml2 is available], cw_cv_lib_libxml2, [
 AC_LANG_SAVE
 AC_LANG_C
 cw_save_LIBS="$LIBS"
-LIBS="`pkg-config --libs libxml-2.0` $LIBS"
+LIBS="$LIBS `pkg-config --libs libxml-2.0`"
 AC_LINK_IFELSE([AC_LANG_CALL([], [xmlParseFile])], [cw_cv_lib_libxml2=yes], [cw_cv_lib_libxml2=no])
 LIBS="$cw_save_LIBS"
 AC_LANG_RESTORE])
@@ -50,6 +50,6 @@ Perhaps you need to add its location to PKG_CONFIG_PATH and LD_LIBRARY_PATH, for
 PKG_CONFIG_PATH=/opt/install/lib/pkgconfig LD_LIBRARY_PATH=/opt/install/lib ./configure])])
 else
   m4_default([$1], [dnl
-  CXXFLAGS="`pkg-config --cflags libxml-2.0` $CXXFLAGS"
+  CXXFLAGS="$CXXFLAGS `pkg-config --cflags libxml-2.0`"
   LIBS="$LIBS `pkg-config --libs libxml-2.0 | sed -e 's%-L/usr/lib %%'`"])
 fi])
