@@ -29,7 +29,7 @@
 #
 # This macro tests for the usability of libcw.
 #
-# The default ACTION_IF_FOUND is to update LIBCW_FLAGS and LIBCW_LIBS.
+# The default ACTION_IF_FOUND is to update CXXFLAGS and CW_LIBS.
 # The default ACTION-IF-NOT-FOUND is to print an error message.
 # If libcw is detected, USE_LIBCW is defined.
 
@@ -38,12 +38,11 @@ AC_CACHE_CHECK([if libcw is available], cw_cv_lib_libcw, [
 # Check if we have libcw
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
-cw_save_LIBS="$LIBS"
 cw_cv_lib_libcw=yes
 dnl Get libs and flags of libcw.
-LIBCW_LIBS="`pkg-config --libs libcw`"
+pkg-config --libs libcw >/dev/null
 test $? -eq 0 || cw_cv_lib_libcw=no
-LIBCW_FLAGS="`pkg-config --cflags libcw`"
+pkg-config --cflags libcw >/dev/null
 test $? -eq 0 || cw_cv_lib_libcw=no
 AC_LANG_RESTORE])
 if test "$cw_cv_lib_libcw" = "no"; then
@@ -54,10 +53,9 @@ Perhaps you need to add its location to PKG_CONFIG_PATH and LD_LIBRARY_PATH, for
 PKG_CONFIG_PATH=/opt/install/lib/pkgconfig LD_LIBRARY_PATH=/opt/install/lib ./configure])])
 else
   m4_default([$1], [dnl
-  LIBCW_LIBS="`pkg-config --libs libcw`"
-  LIBCW_FLAGS="`pkg-config --cflags libcw`"
-  AC_SUBST(LIBCW_LIBS)
-  AC_SUBST(LIBCW_FLAGS)])
+  CXXFLAGS="$CXXFLAGS `pkg-config --cflags libcw`"
+  CW_LIBS="`pkg-config --libs libcw`"
+  AC_SUBST(CW_LIBS)])
   AC_DEFINE_UNQUOTED([USE_LIBCW], 1, [Define when libcw is used with this project.])
 fi])
 
