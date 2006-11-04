@@ -23,7 +23,7 @@ if test ! -f configure.ac; then
     echo "You're using 'configure.in' instead of 'configure.ac'. The autotools react different"
     echo "if you use that old, deprecated name. You should rename it (and fix it)."
   else
-    echo "Cannot find 'configure.ac'."
+    echo -e "\nERROR: Cannot find 'configure.ac'."
   fi
   exit 1
 fi
@@ -57,7 +57,7 @@ else
 fi
 
 if test ! -f ./autogen_versions; then
-  echo -n "Missing file 'autogen_versions'. This file should define required_automake_version"
+  echo -en "\nERROR: Missing file 'autogen_versions'. This file should define required_automake_version"
   if test "$using_libtool" = "yes"; then
     echo -n ", required_libtool_version and libtoolize_arguments"
   fi
@@ -69,12 +69,12 @@ fi
 
 if test "$using_libtool" = "yes"; then
   if test x"$required_libtool_version" = x; then
-    echo "The file autogen_versions should define 'required_libtool_version'."
+    echo -e "\nERROR: The file autogen_versions should define 'required_libtool_version'."
     exit 1
   fi
 fi
 if test x"$required_automake_version" = x; then
-  echo "The file autogen_versions should define 'required_automake_version'."
+  echo -e "\nERROR: The file autogen_versions should define 'required_automake_version'."
   exit 1
 fi
 
@@ -88,19 +88,19 @@ LIBTOOLIZE=${LIBTOOLIZE:-`echo $LIBTOOL | sed -e 's/libtool/libtoolize/'`}
 GTKDOCIZE=${GTKDOCIZE:-gtkdocize}
 
 # Sanity checks.
-($AUTOCONF --version) >/dev/null 2>/dev/null || (echo "Cannot find '$AUTOCONF'. You need GNU autoconf to install from CVS (ftp://ftp.gnu.org/gnu/autoconf/)"; exit 1) || exit 1
-($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo "Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/automake/)"; exit 1) || exit 1
-($ACLOCAL --version) >/dev/null 2>/dev/null || (echo "Cannot find '$ACLOCAL'. Please set the correct environment variable (ACLOCAL)."; exit 1) || exit 1
-($AUTOHEADER --version) >/dev/null 2>/dev/null || (echo "Cannot find '$AUTOHEADER'. Please set the correct environment variable (AUTOHEADER)."; exit 1) || exit 1
+($AUTOCONF --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOCONF'. You need GNU autoconf to install from CVS (ftp://ftp.gnu.org/gnu/autoconf/)"; exit 1) || exit 1
+($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/automake/)"; exit 1) || exit 1
+($ACLOCAL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$ACLOCAL'. Please set the correct environment variable (ACLOCAL)."; exit 1) || exit 1
+($AUTOHEADER --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOHEADER'. Please set the correct environment variable (AUTOHEADER)."; exit 1) || exit 1
 if test $using_libtool = "yes"; then
-  ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo "Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/libtool/)"; exit 1) || exit 1
-  ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo "Cannot find '$LIBTOOLIZE'. Please set the correct environment variable."; exit 1) || exit 1
+  ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from CVS (ftp://ftp.gnu.org/gnu/libtool/)"; exit 1) || exit 1
+  ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOLIZE'. Please set the correct environment variable."; exit 1) || exit 1
 fi
 if test "$using_gettext" = "yes"; then
-  ($GETTEXT --version) >/dev/null 2>/dev/null || (echo "Cannot find '$GETTEXT'. Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
+  ($GETTEXT --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GETTEXT'. Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
 fi
 if test "$using_gtkdoc" = "yes"; then
-  ($GTKDOCIZE --version) >/dev/null 2>/dev/null || (echo "Cannot find '$GTKDOCIZE'. Please set the correct environment variable (GTKDOCIZE)."; exit 1) || exit 1
+  ($GTKDOCIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GTKDOCIZE'. Please set the correct environment variable (GTKDOCIZE)."; exit 1) || exit 1
 fi
 
 # Determine the version of automake.
@@ -111,8 +111,7 @@ expr_automake_version=`echo "$automake_version" | sed -e 's%\.%.000%g' -e 's%^%0
 expr_required_automake_version=`echo "$required_automake_version" | sed -e 's%\.%.000%g' -e 's%^%000%' -e 's%0*\([0-9][0-9][0-9]\)%\1%g'`
 if expr "$expr_required_automake_version" \> "$expr_automake_version" >/dev/null; then
   $AUTOMAKE --version | head -n 1
-  echo ""
-  echo "Fatal error: automake $required_automake_version or higher is required. Please set \$AUTOMAKE"
+  echo -e "\nERROR: automake $required_automake_version or higher is required. Please set \$AUTOMAKE"
   echo "to point to a newer automake, or upgrade."
   echo ""
   exit 1
@@ -129,8 +128,7 @@ if test "$using_libtool" = "yes"; then
   expr_required_libtool_version=`echo "$required_libtool_version" | sed -e 's%\.%.000%g' -e 's%^%000%' -e 's%0*\([0-9][0-9][0-9]\)%\1%g'`
   if expr "$expr_required_libtool_version" \> "$expr_libtool_version" >/dev/null; then
     $LIBTOOL --version
-    echo ""
-    echo "Fatal error: libtool version $required_libtool_version or higher is required."
+    echo -e "\nERROR: libtool version $required_libtool_version or higher is required."
     exit 1
   fi
 
@@ -184,8 +182,7 @@ if test "$using_gettext" = "yes"; then
   expr_gettext_version=`echo "$gettext_version" | sed -e 's%\.%.000%g' -e 's%^%000%' -e 's%0*\([0-9][0-9][0-9]\)%\1%g'`
   if expr "$expr_confver" \> "$expr_gettext_version" >/dev/null; then
     $GETTEXT --version | head -n 1
-    echo ""
-    echo "Fatal error: gettext version "$confver" or higher is required. Please set \$GETTEXT"
+    echo -e "\nERROR: gettext version "$confver" or higher is required. Please set \$GETTEXT"
     echo "to point to a newer gettext, or upgrade."
     echo ""
     exit 1
@@ -216,30 +213,75 @@ elif test -d "docs"; then
   doc_path="docs"
 elif test -d "documents"; then
   doc_path="documents"
+else
+  echo -e "\n*WARNING:**********************************************************"
+  echo "* Creating non-existing directory 'doc'. Add it to your repository!"
+  mkdir doc
+  doc_path="doc"
+  created_doc="yes"
+fi
+
+created_files=
+if [ ! -f "$doc_path/Makefile.am" ]; then
+  created_files="$created_files $doc_path/Makefile.am"
+  cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/Makefile.am $doc_path
+fi
+if test ! -f "$doc_path/main.css"; then
+  created_files="$created_files $doc_path/main.css"
+  cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/main.css $doc_path
+fi
+if test ! -f $doc_path/html.header.in; then
+  created_files="$created_files $doc_path/html.header.in"
+  cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/html.header.in $doc_path
+fi
+if test ! -f $doc_path/html.footer.in; then
+  created_files="$created_files $doc_path/html.footer.in"
+  cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/html.footer.in $doc_path
+fi
+if test ! -f $doc_path/mainpage.dox; then
+  created_files="$created_files $doc_path/mainpage.dox"
+  cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/mainpage.dox $doc_path
 fi
 
 if [ ! -f "$doc_path/doxygen.config.in" ]; then
-  (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\nYou need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
-  echo "*WARNING:********************************************"
-  echo "* Generating an initial \"$doc_path/doxygen.config.in\" file. *"
-  echo "* Edit it and add it to your CVS repository!        *"
+  (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: You need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
+  created_files="$created_files $doc_path/doxygen.config.in"
   doxygen -g "$doc_path/doxygen.config.tmp" >/dev/null
   echo -e "# @""configure_input""@\n" > "$doc_path/doxygen.config.in";
   sed -e 's%^\(PROJECT_NAME[[:space:]=].*\)%\1@PACKAGE_NAME@%' \
       -e 's%^\(PROJECT_NUMBER[[:space:]=].*\)%\1@PACKAGE_VERSION@%' \
       -e 's%^\(OUTPUT_DIRECTORY[[:space:]=].*\)%\1.%' \
       -e 's%^\(INPUT[[:space:]=].*\)%\1@top_srcdir@/src @top_srcdir@/src/include%' \
-      -e 's%^\(FILE_PATTERNS[[:space:]=].*\)%\1*.cc *.h%' \
+      -e 's%^\(FILE_PATTERNS[[:space:]=].*\)%\1*.cc *.h *.dox%' \
       -e 's%^\(QUIET[[:space:]]*=\).*%\1 YES%' \
       -e 's%^\(PREDEFINED[[:space:]]*=\).*%\1 DOXYGEN protected_notdocumented=private%' \
       -e 's%^\(MACRO_EXPANSION[[:space:]]*=\).*%\1 YES%' \
       -e 's%^\(EXPAND_ONLY_PREDEF[[:space:]]*=\).*%\1 YES%' \
       -e 's%^\(HAVE_DOT[[:space:]]*=\).*%\1 @HAVE_DOT@%' \
+      -e 's%^\(STRIP_FROM_PATH[[:space:]]*=\).*%\1 @DOXYGEN_STRIP_FROM_PATH@%' \
+      -e 's%^\(IMAGE_PATH[[:space:]]*=\).*%\1 @top_srcdir@/doc/images%' \
+      -e 's%^\(HTML_HEADER[[:space:]]*=\).*%\1 html.header%' \
+      -e 's%^\(HTML_FOOTER[[:space:]]*=\).*%\1 html.footer%' \
+      -e 's%^\(GENERATE_LATEX[[:space:]]*=\).*%\1 NO%' \
+      -e '/^PREDEFINED[[:space:]]*=/ cPREDEFINED             = "DOXYGEN" \\\
+                         "protected_notdocumented=private" \\\
+                         "public_notdocumented=private" \\\
+                         "@DOXYGEN_CWDEBUG@" \\\
+                         "@DOXYGEN_DEBUG@" \\\
+                         "DDCN(x)=" \\\
+                         "DOXYGEN_STATIC=" \\\
+                         "UNUSED(x)="' \
       "$doc_path/doxygen.config.tmp" >> "$doc_path/doxygen.config.in"
   rm "$doc_path/doxygen.config.tmp"
-  echo "**********************************************(done)*"
 fi
 #      -e 's%^\(CGI_NAME[[:space:]=].*\)%# Obsoleted: \1%' 
+
+if test -n "$created_files"; then
+  echo -e "\n*WARNING:**********************************************************"
+  echo "* The following files were generated:"
+  echo "* $created_files"
+  echo "* Edit them and add them to your repository!"
+fi
 
 fi # using_doxygen
 
@@ -267,12 +309,12 @@ run()
 rm -rf autom4te.cache config.cache
 
 if test ! -f Makefile.am; then
-  echo "Missing Makefile.am"
+  echo -e "\nERROR: Missing Makefile.am"
   exit 1
 fi
 
 if ! grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am >/dev/null; then
-  echo "ACLOCAL_AMFLAGS not set in Makefile.am -- make sure you set it in all Makefile.am's."
+  echo -e "\nERROR: ACLOCAL_AMFLAGS not set in Makefile.am -- make sure you set it in all Makefile.am's."
   exit 1
 fi
 

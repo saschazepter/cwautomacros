@@ -44,7 +44,7 @@
 # `cw_used_libcwd' to "yes" when it is detected, "no" otherwise.
 #
 # The default ACTION_IF_FOUND is, if WANTED is unequal "no",
-# to update CXXFLAGS and CWD_LIBS.
+# to set CWD_FLAGS and CWD_LIBS.
 #
 # The default ACTION-IF-NOT-FOUND is to print an error message;
 # ACTION-IF-NOT-FOUND is only executed when WANTED is "yes" and no
@@ -79,8 +79,9 @@ else
     else
       cw_used_libcwd=yes
       m4_default([$4], [dnl
-      CXXFLAGS="$CXXFLAGS `pkg-config --cflags lib$cw_libname`"
+      CWD_FLAGS="`pkg-config --cflags lib$cw_libname`"
       CWD_LIBS="`pkg-config --libs lib$cw_libname`"])
+      AC_SUBST(CWD_FLAGS)
       AC_SUBST(CWD_LIBS)
     fi
   else

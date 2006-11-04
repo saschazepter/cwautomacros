@@ -1,4 +1,4 @@
-# CW_LIB_LIBCW m4 macro -- this file is part of cwautomacros.
+# CW_LIB_LIBCAIRO m4 macro -- this file is part of cwautomacros.
 # Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -24,39 +24,34 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwautomacros project.
 
-# CW_LIB_LIBCW([ACTION_IF_FOUND], [ACTION-IF-NOT-FOUND])
+# CW_LIB_LIBCAIRO([ACTION_IF_FOUND], [ACTION-IF-NOT-FOUND])
 # -------------------------------------------
 #
-# This macro tests for the usability of libcw.
+# This macro tests for the usability of libcairo.
 #
-# The default ACTION_IF_FOUND is to set CW_FLAGS and CW_LIBS.
+# The default ACTION_IF_FOUND is to set CAIRO_FLAGS and CAIRO_LIBS.
 # The default ACTION-IF-NOT-FOUND is to print an error message.
-# If libcw is detected, USE_LIBCW is defined.
 
-AC_DEFUN([CW_LIB_LIBCW], [
-AC_CACHE_CHECK([if libcw is available], cw_cv_lib_libcw, [
-# Check if we have libcw
+AC_DEFUN([CW_LIB_LIBCAIRO], [
+AC_CACHE_CHECK([if libcairo is available], cw_cv_lib_libcairo, [
+# Check if we have libcairo
 AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
-cw_cv_lib_libcw=yes
-dnl Get libs and flags of libcw.
-pkg-config --libs libcw >/dev/null
-test $? -eq 0 || cw_cv_lib_libcw=no
-pkg-config --cflags libcw >/dev/null
-test $? -eq 0 || cw_cv_lib_libcw=no
+AC_LANG_C
+cw_save_LIBS="$LIBS"
+LIBS="$LIBS `pkg-config --libs cairo`"
+AC_LINK_IFELSE([AC_LANG_CALL([], [cairo_create])], [cw_cv_lib_libcairo=yes], [cw_cv_lib_libcairo=no])
+LIBS="$cw_save_LIBS"
 AC_LANG_RESTORE])
-if test "$cw_cv_lib_libcw" = "no"; then
+if test "$cw_cv_lib_libcairo" = "no"; then
   m4_default([$2], [dnl
   AC_MSG_ERROR([
-Cannot find (a working) libcw.
+Cannot find (a working) libcairo.
 Perhaps you need to add its location to PKG_CONFIG_PATH and LD_LIBRARY_PATH, for example:
 PKG_CONFIG_PATH=/opt/install/lib/pkgconfig LD_LIBRARY_PATH=/opt/install/lib ./configure])])
 else
   m4_default([$1], [dnl
-  CW_FLAGS="`pkg-config --cflags libcw`"
-  CW_LIBS="`pkg-config --libs libcw`"
-  AC_SUBST(CW_FLAGS)
-  AC_SUBST(CW_LIBS)])
-  AC_DEFINE_UNQUOTED([USE_LIBCW], 1, [Define when libcw is used with this project.])
+  CAIRO_FLAGS="`pkg-config --cflags cairo`"
+  CAIRO_LIBS="`pkg-config --libs cairo`"])
+  AC_SUBST(CAIRO_FLAGS)
+  AC_SUBST(CAIRO_LIBS)
 fi])
-

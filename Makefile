@@ -25,4 +25,9 @@ install:
 	done
 	install -d $(INSTALLPREFIX)/share/cwautomacros/templates
 	install -m 755 templates/*.sh $(INSTALLPREFIX)/share/cwautomacros/templates
+	install -d $(INSTALLPREFIX)/share/cwautomacros/templates/doxygen
+	install -m 644 templates/doxygen/Makefile.am $(INSTALLPREFIX)/share/cwautomacros/templates/doxygen
+	install -m 644 templates/doxygen/html.* $(INSTALLPREFIX)/share/cwautomacros/templates/doxygen
+	install -m 644 templates/doxygen/*.css $(INSTALLPREFIX)/share/cwautomacros/templates/doxygen
+	install -m 644 templates/doxygen/*.dox $(INSTALLPREFIX)/share/cwautomacros/templates/doxygen
 

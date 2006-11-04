@@ -26,12 +26,24 @@
 
 dnl CW_DOXYGEN
 dnl
-dnl The following is created if it doesn't already exist:
+dnl The following is created, if it doesn't already exist, by autogen.sh:
 dnl - A directory 'doc' in srcdir
 dnl - $(srcdir)/doc/Makefile.am
 dnl - $(srcdir)/doc/doxygen.config.in
-dnl - $(srcdir)/doc/doxygen.css
+dnl - $(srcdir)/doc/main.css
 dnl - $(srcdir)/doc/html.header
 dnl - $(srcdir)/doc/html.footer
 dnl - $(srcdir)/doc/mainpage.dox
 dnl 
+AC_DEFUN([CW_DOXYGEN], [
+# Check if we have graphviz's 'dot'.
+AC_PATH_PROG(DOXYGEN_DOT, [dot],)
+AC_SUBST(DOXYGEN_DOT)
+HAVE_DOT=NO
+if test -n "$DOXYGEN_DOT"; then
+HAVE_DOT=YES
+fi
+AC_SUBST(HAVE_DOT)
+DOXYGEN_STRIP_FROM_PATH=$(cd $srcdir; pwd)
+AC_SUBST(DOXYGEN_STRIP_FROM_PATH)
+])

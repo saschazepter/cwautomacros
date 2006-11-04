@@ -1,4 +1,4 @@
-# CW_LIB_LIBCW m4 macro -- this file is part of cwautomacros.
+# CW_LIB_LIBXMLWRAPP m4 macro -- this file is part of cwautomacros.
 # Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -24,39 +24,34 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwautomacros project.
 
-# CW_LIB_LIBCW([ACTION_IF_FOUND], [ACTION-IF-NOT-FOUND])
+# CW_LIB_LIBXMLWRAPP([ACTION_IF_FOUND], [ACTION-IF-NOT-FOUND])
 # -------------------------------------------
 #
-# This macro tests for the usability of libcw.
+# This macro tests for the usability of libxml2.
 #
-# The default ACTION_IF_FOUND is to set CW_FLAGS and CW_LIBS.
+# The default ACTION_IF_FOUND is to update CXXFLAGS and LIBS.
 # The default ACTION-IF-NOT-FOUND is to print an error message.
-# If libcw is detected, USE_LIBCW is defined.
 
-AC_DEFUN([CW_LIB_LIBCW], [
-AC_CACHE_CHECK([if libcw is available], cw_cv_lib_libcw, [
-# Check if we have libcw
+AC_DEFUN([CW_LIB_LIBXMLWRAPP], [
+AC_CACHE_CHECK([if libxmlwrapp is available], cw_cv_lib_libxmlwrapp, [
+# Check if we have libxmlwrapp
 AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
-cw_cv_lib_libcw=yes
-dnl Get libs and flags of libcw.
-pkg-config --libs libcw >/dev/null
-test $? -eq 0 || cw_cv_lib_libcw=no
-pkg-config --cflags libcw >/dev/null
-test $? -eq 0 || cw_cv_lib_libcw=no
+AC_LANG_C
+cw_save_LIBS="$LIBS"
+LIBS="$LIBS `pkg-config --libs xmlwrapp`"
+AC_LINK_IFELSE([AC_LANG_CALL([], [xmlParseFile])], [cw_cv_lib_libxmlwrapp=yes], [cw_cv_lib_libxmlwrapp=no])
+LIBS="$cw_save_LIBS"
 AC_LANG_RESTORE])
-if test "$cw_cv_lib_libcw" = "no"; then
+if test "$cw_cv_lib_libxmlwrapp" = "no"; then
   m4_default([$2], [dnl
   AC_MSG_ERROR([
-Cannot find (a working) libcw.
+Cannot find (a working) libxmlwrapp.
 Perhaps you need to add its location to PKG_CONFIG_PATH and LD_LIBRARY_PATH, for example:
-PKG_CONFIG_PATH=/opt/install/lib/pkgconfig LD_LIBRARY_PATH=/opt/install/lib ./configure])])
+PKG_CONFIG_PATH=/opt/install/lib/pkgconfig LD_LIBRARY_PATH=/opt/install/lib ./configure
+It might be necessary to compile and install libxmlwrapp, see
+http://www.xs4all.nl/~carlo17/xmlwrapp-0.5.0.tar.gz])])
 else
   m4_default([$1], [dnl
-  CW_FLAGS="`pkg-config --cflags libcw`"
-  CW_LIBS="`pkg-config --libs libcw`"
-  AC_SUBST(CW_FLAGS)
-  AC_SUBST(CW_LIBS)])
-  AC_DEFINE_UNQUOTED([USE_LIBCW], 1, [Define when libcw is used with this project.])
+  CXXFLAGS="$CXXFLAGS `pkg-config --cflags xmlwrapp`"
+  LIBS="$LIBS `pkg-config --libs xmlwrapp`"])
 fi])
-
