@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<h2>CWautomacros: a collection of autoconf m4 macros by Carlo Wood</h2>
+<h2>cwautomacros: a collection of autoconf m4 macros</h2>
 
 <p>This project is intended for <em>developers</em> who downloaded a project with CVS/SVN
 that uses <i>cwautomacros</i>.</p>
