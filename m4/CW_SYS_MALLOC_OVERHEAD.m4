@@ -51,7 +51,7 @@ bool bulk_alloc(size_t malloc_overhead_attempt, size_t size)
   return (distance == (long int)size);
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char* [])
 {
   if (argc == 1)
     exit(0);	// This wasn't the real test yet

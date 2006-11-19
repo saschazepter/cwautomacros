@@ -34,6 +34,9 @@ AC_DEFUN([CW_TYPE_EXTRACT_FROM],
 [$2]
 #ifdef __cplusplus
 #include <cstdlib>
+#define ARGF
+#else
+#define ARGF f
 #endif
 template<typename ARG>
   void detect_type(ARG)
@@ -48,7 +51,7 @@ echo $ac_n "typename ARG$i[,] $ac_c" >> conftest.$ac_ext
 i=`echo $i | sed -e 'y/012345678/123456789/'`
 done
 echo "typename ARG$3>" >> conftest.$ac_ext
-echo $ac_n "void foo(ARG0(*f)($ac_c" >> conftest.$ac_ext
+echo $ac_n "void foo(ARG0(*ARGF)($ac_c" >> conftest.$ac_ext
 i=1
 while test "$i" != "$3"; do
 echo $ac_n "ARG$i[,] $ac_c" >> conftest.$ac_ext

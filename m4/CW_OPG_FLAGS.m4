@@ -25,22 +25,49 @@
 # all other use of the material that constitutes the cwautomacros project.
 
 dnl CW_OPG_FLAGS
-dnl Add --enable-debug (DEBUG, DOXYGEN_DEBUG), --enable-libcwd (CWDEBUG, DOXYGEN_CWDEBUG),
-dnl --enable-optimise and --enable-profile options. Update USE_LIBCWD, LIBS and CXXFLAGS accordingly.
+dnl
+dnl Add --enable-debug    (DEBUG, DOXYGEN_DEBUG),
+dnl     --enable-libcwd   (CWDEBUG, DOXYGEN_CWDEBUG),
+dnl     --enable-optimize
+dnl and --enable-profile
+dnl options.
+dnl
+dnl This macro sets CXXFLAGS to include -g (or -ggdb on FreeBSD) when
+dnl debugging is required, -O2 when optimization is required and
+dnl appropriate warning flags.
+dnl
+dnl However, if CXXFLAGS already contains a -g* option then that is used
+dnl instead of the default -g (-ggdb). If it contains a -O* option then
+dnl that is used instead of -O2. Finally, if options are passed to
+dnl the macro, then those are used instead of the default ones.
+dnl
+dnl Update USE_LIBCWD, CWD_FLAGS, CWD_LIBS, CXXFLAGS and LDFLAGS accordingly.
+dnl
+dnl Further more, the following macros are set:
+dnl
+dnl CW_DEBUG_FLAGS	: Any -g* flags.
+dnl CW_OPTIMISE_FLAGS	: Any -O* flags.
+dnl CW_WARNING_FLAGS	: Any -W* flags.
+dnl CW_STRIPPED_CXXFLAGS: Any other flags that were already in CXXFLAGS.
+dnl
 AC_DEFUN([CW_OPG_FLAGS], [dnl
+dnl Containers for the respective options.
 m4_pattern_allow(CW_DEBUG_FLAGS)
 m4_pattern_allow(CW_OPTIMISE_FLAGS)
+m4_pattern_allow(CW_WARNING_FLAGS)
 m4_pattern_allow(CW_STRIPPED_CXXFLAGS)
+m4_pattern_allow(CW_DEFAULT_DEBUG_FLAGS)
 
 # Add args to configure
-AC_ARG_ENABLE(debug,         [  --enable-debug          build for debugging @<:@no@:>@])
-AC_ARG_ENABLE(libcwd,        [  --enable-libcwd         link with libcwd @<:@auto@:>@])
-AC_ARG_ENABLE(optimise,      [  --enable-optimise       do code optimization @<:@auto@:>@])
-AC_ARG_ENABLE(profile,       [  --enable-profile        add profiling code @<:@no@:>@])
+AC_ARG_ENABLE(cw_debug,         [  --enable-debug          build for debugging @<:@no@:>@], [cw_config_debug=$enableval], [cw_config_debug=])
+AC_ARG_ENABLE(cw_libcwd,        [  --enable-libcwd         link with libcwd @<:@auto@:>@], [cw_config_libcwd=$enableval], [cw_config_libcwd=])
+AC_ARG_ENABLE(cw_optimize,      [  --enable-optimize       do code optimization @<:@auto@:>@], [cw_config_optimize=$enableval], [cw_config_optimize=])
+AC_ARG_ENABLE(cw_profile,       [  --enable-profile        add profiling code @<:@no@:>@], [cw_config_profile=$enableval], [cw_config_profile=])
 
 # Strip possible -g and -O commandline options from CXXFLAGS.
 CW_DEBUG_FLAGS=
 CW_OPTIMISE_FLAGS=
+CW_WARNING_FLAGS=
 CW_STRIPPED_CXXFLAGS=
 for arg in $CXXFLAGS; do
 case "$arg" in # (
@@ -50,44 +77,57 @@ case "$arg" in # (
 -O*)
         CW_OPTIMISE_FLAGS="$CW_OPTIMISE_FLAGS $arg"
         ;; # (
+-W*)	CW_WARNING_FLAGS="$CW_WARNING_FLAGS $arg"
+	;; # (
 *)
         CW_STRIPPED_CXXFLAGS="$CW_STRIPPED_CXXFLAGS $arg"
         ;;
 esac
 done
-CXXFLAGS="$CW_STRIPPED_CXXFLAGS"
 
 # Set various defaults, depending on other options.
 
-if test x"$enable_optimise" = x"no"; then
-    CW_OPTIMISE_FLAGS=""        # Explicit --disable-optimise, strip optimization even from CXXFLAGS environment variable.
+if test x"$enable_cw_optimize" = x"no"; then
+    CW_OPTIMISE_FLAGS=""        # Explicit --disable-optimize, strip optimization even from CXXFLAGS environment variable.
 fi
 
 if test x"$enable_maintainer_mode" = x"yes"; then
-  if test -z "$enable_optimise"; then
-    enable_optimise=no          # --enable-maintainer-mode, set default to --disable-optimise.
+  if test -z "$enable_cw_optimize"; then
+    enable_cw_optimize=no          # --enable-maintainer-mode, set default to --disable-optimize.
+  fi
+  if test -z "$enable_cw_debug"; then
+    enable_cw_debug=yes            # --enable-maintainer-mode, set default to --enable-debug.
   fi
 fi
 
-if test x"$enable_debug" = x"yes"; then
-  if test -z "$enable_optimise"; then
-    enable_optimise=no          # --enable-debug and no --enable-optimise, set default to --disable-optimise.
+if test x"$enable_cw_debug" = x"yes"; then
+  if test -z "$enable_cw_optimize"; then
+    enable_cw_optimize=no          # --enable-debug and no --enable-optimize, set default to --disable-optimize.
   fi
 else
-  if test -z "$enable_libcwd"; then
-    enable_libcwd=no            # No --enable-debug and no --enable-libcwd, set default to --disable-libcwd.
+  if test -z "$enable_cw_libcwd"; then
+    enable_cw_libcwd=no            # No --enable-debug and no --enable-libcwd, set default to --disable-libcwd.
   fi
 fi
 
-# Handle enable_libcwd.
-# Check if we have libcwd, $enable_libcwd can be "yes", "no" or "".
-CW_LIB_LIBCWD([libcwd], [$enable_libcwd], [no])
+dnl Find out which debugging options we need
+AC_CANONICAL_HOST
+case "$host" in
+  *freebsd*) CW_DEFAULT_DEBUG_FLAGS=-ggdb ;; dnl FreeBSD needs -ggdb to include sourcefile:linenumber info in its object files.
+  *) CW_DEFAULT_DEBUG_FLAGS=-g ;;
+esac
+
+# Handle enable_cw_libcwd.
+# Check if we have libcwd, $enable_cw_libcwd can be "yes", "no" or "".
+if test -z "$cw_used_libcwd"; then
+CW_LIB_LIBCWD([libcwd], [$enable_cw_libcwd], [no])
+fi
 USE_LIBCWD="$cw_used_libcwd"
 AC_SUBST([USE_LIBCWD])
 if test "$cw_used_libcwd" = "yes"; then
-  test -n "$CW_DEBUG_FLAGS" || CW_DEBUG_FLAGS="-g"
-  if test -z "$enable_optimise"; then
-    enable_optimise=no          # libcwd is being used, set default to --disable-optimise.
+  test -n "$CW_DEBUG_FLAGS" || CW_DEBUG_FLAGS="$CW_DEFAULT_DEBUG_FLAGS"
+  if test -z "$enable_cw_optimize"; then
+    enable_cw_optimize=no          # libcwd is being used, set default to --disable-optimize.
   fi
   DOXYGEN_CWDEBUG=CWDEBUG
 else
@@ -95,31 +135,60 @@ else
 fi
 AC_SUBST([DOXYGEN_CWDEBUG])
 
-# Handle enable_debug.
-if test x"$enable_debug" = x"yes"; then
-  CXXFLAGS="$CXXFLAGS -W -Wall -Wundef -DDEBUG"
+# Handle enable_cw_debug.
+if test x"$enable_cw_debug" = x"yes"; then
+  CW_STRIPPED_CXXFLAGS="$CW_STRIPPED_CXXFLAGS -DDEBUG"
   DOXYGEN_DEBUG=DEBUG
-  test -n "$CW_DEBUG_FLAGS" || CW_DEBUG_FLAGS="-g"
+  test -n "$CW_DEBUG_FLAGS" || CW_DEBUG_FLAGS="$CW_DEFAULT_DEBUG_FLAGS"
 else
   DOXYGEN_DEBUG=
 fi
 AC_SUBST([DOXYGEN_DEBUG])
 
-# Handle enable_optimise; when not explicitly set to "no", use user provided
+# Handle enable_cw_optimize; when not explicitly set to "no", use user provided
 # optimization flags, or -O2 when nothing was provided.
-if test x"$enable_optimise" != x"no"; then
+if test x"$enable_cw_optimize" != x"no"; then
   test -n "$CW_OPTIMISE_FLAGS" || CW_OPTIMISE_FLAGS="-O2"
 fi
 
-# Handle enable_profile.
-if test x"$enable_profile" = x"yes"; then
-  CXXFLAGS="$CXXFLAGS -pg"
+# Handle enable_cw_profile.
+if test x"$enable_cw_profile" = x"yes"; then
+  CW_STRIPPED_CXXFLAGS="$CW_STRIPPED_CXXFLAGS -pg"
   LDFLAGS="$LDFLAGS -pg"
 fi
 
-# Reassemble CXXFLAGS with debug and optimization flags.
-[CXXFLAGS=`echo "$CW_DEBUG_FLAGS $CW_OPTIMISE_FLAGS $CXXFLAGS" | sed -e 's/^ *//' -e 's/  */ /g' -e 's/ *$//'`]
+# Choose warning options to use.
+# If not in maintainer mode, use the warning options that were in CXXFLAGS.
+# Otherwise, use those plus any passed to the macro, or if neither are
+# given a default string - and then filter out incompatible warnings.
+if test x"$enable_maintainer_mode" = x"yes"; then
+  if test -z "$1" -a -z "$CW_WARNING_FLAGS"; then
+    CW_WARNING_FLAGS="-W -Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Werror -Winline"
+  else
+    CW_WARNING_FLAGS="$CW_WARNING_FLAGS $1"
+  fi
+  AC_EGREP_CPP(Winline-broken, [
+#if __GNUC__ < 3
+  Winline-broken
+#endif
+  ],
+     dnl -Winline is broken.
+     [CW_WARNING_FLAGS="$(echo "$CW_WARNING_FLAGS" | sed -e 's/ -Winline//g')"],
+     dnl -Winline is not broken. Remove -Werror when optimizing though.
+     [if test -n "$CW_OPTIMISE_FLAGS"; then
+        CW_WARNING_FLAGS="$(echo "$CW_WARNING_FLAGS" | sed -e 's/ -Werror//g')"
+      fi]
+  )
+fi
 
-dnl Put CXXFLAGS into the Makefile too
+# Reassemble CXXFLAGS with debug and optimization flags.
+[CXXFLAGS=`echo "$CW_DEBUG_FLAGS $CW_WARNING_FLAGS $CW_OPTIMISE_FLAGS $CW_STRIPPED_CXXFLAGS" | sed -e 's/^ *//' -e 's/  */ /g' -e 's/ *$//'`]
+
+dnl Put CXXFLAGS into the Makefile.
 AC_SUBST(CXXFLAGS)
+dnl Allow fine tuning if necessary, by putting the substituting the parts too.
+AC_SUBST(CW_DEBUG_FLAGS)
+AC_SUBST(CW_WARNING_FLAGS)
+AC_SUBST(CW_OPTIMISE_FLAGS)
+AC_SUBST(CW_STRIPPED_CXXFLAGS)
 ])

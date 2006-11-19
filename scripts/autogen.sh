@@ -205,14 +205,14 @@ if test -f "doc/doxygen.config.in"; then
   doc_path="doc"
 elif test -f "docs/doxygen.config.in"; then
   doc_path="docs"
-elif test -f "documents/doxygen.config.in"; then
-  doc_path="documents"
+elif test -f "documentation/doxygen.config.in"; then
+  doc_path="documentation"
 elif test -d "doc"; then
   doc_path="doc"
 elif test -d "docs"; then
   doc_path="docs"
-elif test -d "documents"; then
-  doc_path="documents"
+elif test -d "documentation"; then
+  doc_path="documentation"
 else
   echo -e "\n*WARNING:**********************************************************"
   echo "* Creating non-existing directory 'doc'. Add it to your repository!"
