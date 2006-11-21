@@ -222,28 +222,28 @@ else
 fi
 
 created_files=
-if [ ! -f "$doc_path/Makefile.am" ]; then
+if [ ! -f "$doc_path/Makefile.am" -a ! -f "$doc_path/Makefile.in" -a ! -f "$doc_path/Makefile" ]; then
   created_files="$created_files $doc_path/Makefile.am"
   cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/Makefile.am $doc_path
 fi
-if test ! -f "$doc_path/main.css"; then
+if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/main.css" ]; then
   created_files="$created_files $doc_path/main.css"
   cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/main.css $doc_path
 fi
-if test ! -f $doc_path/html.header.in; then
+if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/html.header.in" -a ! -f "$doc_path/html.header" ]; then
   created_files="$created_files $doc_path/html.header.in"
   cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/html.header.in $doc_path
 fi
-if test ! -f $doc_path/html.footer.in; then
+if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/html.footer.in" -a ! -f "$doc_path/html.footer" ]; then
   created_files="$created_files $doc_path/html.footer.in"
   cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/html.footer.in $doc_path
 fi
-if test ! -f $doc_path/mainpage.dox; then
+if [ -f "$doc_path/Makefile.am" -a ! -f $doc_path/mainpage.dox ]; then
   created_files="$created_files $doc_path/mainpage.dox"
   cp ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/templates/doxygen/mainpage.dox $doc_path
 fi
 
-if [ ! -f "$doc_path/doxygen.config.in" ]; then
+if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/doxygen.config.in" -a ! -f "$doc_path/doxygen.config" ]; then
   (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: You need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
   created_files="$created_files $doc_path/doxygen.config.in"
   doxygen -g "$doc_path/doxygen.config.tmp" >/dev/null
