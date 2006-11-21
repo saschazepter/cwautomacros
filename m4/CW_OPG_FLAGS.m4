@@ -59,10 +59,10 @@ m4_pattern_allow(CW_STRIPPED_CXXFLAGS)
 m4_pattern_allow(CW_DEFAULT_DEBUG_FLAGS)
 
 # Add args to configure
-AC_ARG_ENABLE(cw_debug,         [  --enable-debug          build for debugging @<:@no@:>@], [cw_config_debug=$enableval], [cw_config_debug=])
-AC_ARG_ENABLE(cw_libcwd,        [  --enable-libcwd         link with libcwd @<:@auto@:>@], [cw_config_libcwd=$enableval], [cw_config_libcwd=])
-AC_ARG_ENABLE(cw_optimize,      [  --enable-optimize       do code optimization @<:@auto@:>@], [cw_config_optimize=$enableval], [cw_config_optimize=])
-AC_ARG_ENABLE(cw_profile,       [  --enable-profile        add profiling code @<:@no@:>@], [cw_config_profile=$enableval], [cw_config_profile=])
+AC_ARG_ENABLE(debug,         [  --enable-debug          build for debugging @<:@no@:>@], [cw_config_debug=$enableval], [cw_config_debug=])
+AC_ARG_ENABLE(libcwd,        [  --enable-libcwd         link with libcwd @<:@auto@:>@], [cw_config_libcwd=$enableval], [cw_config_libcwd=])
+AC_ARG_ENABLE(optimize,      [  --enable-optimize       do code optimization @<:@auto@:>@], [cw_config_optimize=$enableval], [cw_config_optimize=])
+AC_ARG_ENABLE(profile,       [  --enable-profile        add profiling code @<:@no@:>@], [cw_config_profile=$enableval], [cw_config_profile=])
 
 # Strip possible -g and -O commandline options from CXXFLAGS.
 CW_DEBUG_FLAGS=
@@ -87,26 +87,26 @@ done
 
 # Set various defaults, depending on other options.
 
-if test x"$enable_cw_optimize" = x"no"; then
+if test x"$cw_config_optimize" = x"no"; then
     CW_OPTIMISE_FLAGS=""        # Explicit --disable-optimize, strip optimization even from CXXFLAGS environment variable.
 fi
 
 if test x"$enable_maintainer_mode" = x"yes"; then
-  if test -z "$enable_cw_optimize"; then
-    enable_cw_optimize=no          # --enable-maintainer-mode, set default to --disable-optimize.
+  if test -z "$cw_config_optimize"; then
+    cw_config_optimize=no          # --enable-maintainer-mode, set default to --disable-optimize.
   fi
-  if test -z "$enable_cw_debug"; then
-    enable_cw_debug=yes            # --enable-maintainer-mode, set default to --enable-debug.
+  if test -z "$cw_config_debug"; then
+    cw_config_debug=yes            # --enable-maintainer-mode, set default to --enable-debug.
   fi
 fi
 
-if test x"$enable_cw_debug" = x"yes"; then
-  if test -z "$enable_cw_optimize"; then
-    enable_cw_optimize=no          # --enable-debug and no --enable-optimize, set default to --disable-optimize.
+if test x"$cw_config_debug" = x"yes"; then
+  if test -z "$cw_config_optimize"; then
+    cw_config_optimize=no          # --enable-debug and no --enable-optimize, set default to --disable-optimize.
   fi
 else
-  if test -z "$enable_cw_libcwd"; then
-    enable_cw_libcwd=no            # No --enable-debug and no --enable-libcwd, set default to --disable-libcwd.
+  if test -z "$cw_config_libcwd"; then
+    cw_config_libcwd=no            # No --enable-debug and no --enable-libcwd, set default to --disable-libcwd.
   fi
 fi
 
@@ -117,17 +117,17 @@ case "$host" in
   *) CW_DEFAULT_DEBUG_FLAGS=-g ;;
 esac
 
-# Handle enable_cw_libcwd.
-# Check if we have libcwd, $enable_cw_libcwd can be "yes", "no" or "".
+# Handle cw_config_libcwd.
+# Check if we have libcwd, $cw_config_libcwd can be "yes", "no" or "".
 if test -z "$cw_used_libcwd"; then
-CW_LIB_LIBCWD([libcwd], [$enable_cw_libcwd], [no])
+CW_LIB_LIBCWD([libcwd], [$cw_config_libcwd], [no])
 fi
 USE_LIBCWD="$cw_used_libcwd"
 AC_SUBST([USE_LIBCWD])
 if test "$cw_used_libcwd" = "yes"; then
   test -n "$CW_DEBUG_FLAGS" || CW_DEBUG_FLAGS="$CW_DEFAULT_DEBUG_FLAGS"
-  if test -z "$enable_cw_optimize"; then
-    enable_cw_optimize=no          # libcwd is being used, set default to --disable-optimize.
+  if test -z "$cw_config_optimize"; then
+    cw_config_optimize=no          # libcwd is being used, set default to --disable-optimize.
   fi
   DOXYGEN_CWDEBUG=CWDEBUG
 else
@@ -135,8 +135,8 @@ else
 fi
 AC_SUBST([DOXYGEN_CWDEBUG])
 
-# Handle enable_cw_debug.
-if test x"$enable_cw_debug" = x"yes"; then
+# Handle cw_config_debug.
+if test x"$cw_config_debug" = x"yes"; then
   CW_STRIPPED_CXXFLAGS="$CW_STRIPPED_CXXFLAGS -DDEBUG"
   DOXYGEN_DEBUG=DEBUG
   test -n "$CW_DEBUG_FLAGS" || CW_DEBUG_FLAGS="$CW_DEFAULT_DEBUG_FLAGS"
@@ -145,14 +145,14 @@ else
 fi
 AC_SUBST([DOXYGEN_DEBUG])
 
-# Handle enable_cw_optimize; when not explicitly set to "no", use user provided
+# Handle cw_config_optimize; when not explicitly set to "no", use user provided
 # optimization flags, or -O2 when nothing was provided.
-if test x"$enable_cw_optimize" != x"no"; then
+if test x"$cw_config_optimize" != x"no"; then
   test -n "$CW_OPTIMISE_FLAGS" || CW_OPTIMISE_FLAGS="-O2"
 fi
 
-# Handle enable_cw_profile.
-if test x"$enable_cw_profile" = x"yes"; then
+# Handle cw_config_profile.
+if test x"$cw_config_profile" = x"yes"; then
   CW_STRIPPED_CXXFLAGS="$CW_STRIPPED_CXXFLAGS -pg"
   LDFLAGS="$LDFLAGS -pg"
 fi
