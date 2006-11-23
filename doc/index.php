@@ -12,7 +12,7 @@
 that uses <i>cwautomacros</i>.</p>
 
 <p>If you have been sent here after running `autogen.sh', then
-get the cwautomacros sources with <a href="http://developer.berlios.de/cvs/?group_id=6077">Anonymous CVS Access</a>,
+get the cwautomacros sources with <a href="http://developer.berlios.de/svn/?group_id=6077">Anonymous SVN Access</a>,
 or download the latest <a href="http://developer.berlios.de/project/showfiles.php?group_id=6077">tar ball</a>.</p>
 
 <p>It's all plug-and-play: the files and scripts are installed under <code>/usr/share/cwautomacros</code>
