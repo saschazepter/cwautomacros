@@ -2,7 +2,7 @@
 
 # Clueless user check.
 if test ! -d CVS -a ! -d .svn -a -f configure; then
-  echo "You only need to run './autogen.sh' when you checked out this project using CVS/SVN."
+  echo "You only need to run './autogen.sh' when you checked out this project using SVN."
   echo "Just run ./configure [--help]."
   echo "If you insist on running it, then first remove the 'configure' script."
   exit 0
