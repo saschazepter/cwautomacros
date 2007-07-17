@@ -34,6 +34,8 @@
 # LIBLIST is a space seperated list of boost library names we want.
 AC_DEFUN([CW_BOOST],
 [dnl
+# Require cw_used_libcwd and cw_config_debug to be set already.
+AC_REQUIRE([CW_OPG_FLAGS])
 # Add a few configure scripts that allow the user to specify values that we might not be able to find outselfs.
 AC_ARG_ENABLE(boost-root, [dnl
   --enable-boost-root=/path/to/boost_root
@@ -103,18 +105,6 @@ if test -n "$3"; then
     LIBS="$LIBS -L\"$BOOST_ROOT/lib\""
   fi
 
-  if test "$BOOST_TOOLSET" != "none"; then
-    # Get a list of possible runtime flags.
-    # According to the boost webpage these special an 'ABI', so we demand that the same flags are used for every library.
-    cw_boost_runtime_flags="`ls "$BOOST_ROOT"/lib/"$cw_boost_lib_prefix"boost_* | \
-      grep "$cw_boost_lib_prefix""boost_.*-$BOOST_TOOLSET$cw_boost_threading-[[dgnpsy]]*-$BOOST_VERSION\.$cw_boost_lib_postfix\$" | \
-      sed -e 's/.*-'$BOOST_TOOLSET$cw_boost_threading'-\([[dgnpsy]]*\)-'$BOOST_VERSION'\.'$cw_boost_lib_postfix'$/\1/' | \
-      sort -u`"
-    # Determine the runtime flags we want to use.
-    cw_boost_runtime=-d
-  fi
-
-
   # Run over each requested library
   for l in $3; do
     # Strip off possible prefixes.
@@ -123,6 +113,18 @@ if test -n "$3"; then
     if test "$BOOST_TOOLSET" = "none"; then
       LIBS="$LIBS -lboost_$cw_boost_lib_name"
     else
+      # Get a list of possible runtime flags.
+      cw_boost_runtime_flags="`ls "$BOOST_ROOT"/lib/"$cw_boost_lib_prefix""boost_$cw_boost_lib_name-$BOOST_TOOLSET$cw_boost_threading"*"-$BOOST_VERSION.$cw_boost_lib_postfix" | \
+	grep "$cw_boost_lib_prefix""boost_$cw_boost_lib_name-$BOOST_TOOLSET$cw_boost_threading-[[dgnpsy]]*-$BOOST_VERSION\.$cw_boost_lib_postfix\$" | \
+	sed -e 's/.*boost_'$cw_boost_lib_name-$BOOST_TOOLSET$cw_boost_threading'-\([[dgnpsy]]*\)-'$BOOST_VERSION'\.'$cw_boost_lib_postfix'$/\1/' | \
+	sort -u`"
+      # Determine the runtime flags we want to use.
+      cw_boost_runtime=
+      if test x"$cw_used_libcwd" = x"yes" -o x"$cw_config_debug" = x"yes"; then
+	if echo "$cw_boost_runtime_flags" | grep '^d$' >/dev/null; then
+	  cw_boost_runtime=-d
+	fi
+      fi
       LIBS="$LIBS -lboost_$cw_boost_lib_name-$BOOST_TOOLSET$cw_boost_threading$cw_boost_runtime-$BOOST_VERSION"
     fi
   done
