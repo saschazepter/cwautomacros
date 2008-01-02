@@ -1,5 +1,5 @@
-# CW_SYS_PCH m4 macro -- this file is part of cwautomacros.
-# Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
+# CW_CONFIG_FILE m4 macro -- this file is part of cwautomacros.
+# Copyright (C) 2007 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,36 +24,19 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwautomacros project.
 
-# CW_SYS_PCH
-# ----------
-#
-# This macro checks if the compiler supports PCH
-# and if so, set `cw_cv_prog_CXX_pch' to "yes"
-# and sets the automake conditional `USE_PCH'.
-#
-AC_DEFUN([CW_SYS_PCH],
-[AC_CACHE_CHECK([for compiler with PCH support],
-  [cw_cv_prog_CXX_pch],
-  [ac_save_CXXFLAGS="$CXXFLAGS"
-  CXXFLAGS="$CXXFLAGS -Werror -Winvalid-pch -Wno-deprecated"
-  AC_LANG_SAVE
-  AC_LANG_CPLUSPLUS
-  echo '#include <math.h>' > conftest.h
-  rm -f conftest.h.gch
-  if $CXX $CXXFLAGS $CPPFLAGS -x c++-header conftest.h \
-      -c -o conftest.h.gch 1>&5 2>&1 &&
-    echo '#error "pch failed"' > conftest.h &&
-    echo '#include "conftest.h"' > conftest.cc &&
-    $CXX -c $CXXFLAGS $CPPFLAGS conftest.cc 1>&5 2>&1 ;
-  then
-    cw_cv_prog_CXX_pch=yes
-  else
-    cw_cv_prog_CXX_pch=no
-  fi
-  rm -f conftest*
-  CXXFLAGS=$ac_save_CXXFLAGS
-  AC_LANG_RESTORE
-])
-AM_CONDITIONAL(USE_PCH, test "$cw_cv_prog_CXX_pch" = "yes")
-CW_MAKEFILEIN_PREFIX])
-
+dnl CW_CONFIG_FILE
+dnl
+dnl Generate $1/$2 from $1/$2.in, but only if the file
+dnl really changed.
+AC_DEFUN([CW_CONFIG_FILE], [
+AC_CONFIG_FILES($1/timestamp-$2:$1/$2.in, [
+cd $1
+if cmp -s $2 timestamp-$2 2> /dev/null; then
+  echo "config.status: $2 is unchanged"
+else
+  echo "config.status: creating $2"
+  cp timestamp-$2 $2
+fi
+touch timestamp-$2
+cd ..
+])])

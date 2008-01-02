@@ -28,6 +28,7 @@
 # ----------------------------------
 #
 # Setup CXXFLAGS and LIBS for use with boost.
+# Also USE_LIBBOOST is defined.
 #
 # STATIC must be 'yes' when we want to link to the static libraries.
 # THREADS must be 'yes' if we need the thread-safe libraries.
@@ -67,6 +68,8 @@ if test -z "$BOOST_TOOLSET"; then
 Please set the environment variable BOOST_TOOLSET to the correct value
 or use the configure option --enable-boost-toolset=<toolset>.])
 fi
+
+AC_DEFINE_UNQUOTED([USE_LIBBOOST], 1, [Define when boost is used with this project.])
 
 # Set a few handy variables.
 cw_boost_lib_prefix=lib
