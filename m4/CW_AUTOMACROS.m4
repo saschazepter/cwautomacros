@@ -27,6 +27,10 @@
 dnl CW_AUTOMACROS
 dnl Take care of general things needed.
 AC_DEFUN([CW_AUTOMACROS], [dnl
+dnl Check cwautomacros version.
+if test -n "$1" && test @VERSION@ < $1; then
+  AC_ERROR_MSG([cwautomacros version @VERSION@ or later is required.])
+fi
 dnl Detect unexpanded macros.
 m4_pattern_forbid(CW_)
 dnl Define ACLOCAL_CWFLAGS, so that rerunning aclocal from 'make' will work.
