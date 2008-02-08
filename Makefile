@@ -4,19 +4,23 @@
 
 ifeq (${CWAUTOMACROSPREFIX},)
 # The default installation prefix.
-INSTALLPREFIX=/usr
+INSTALLPREFIX = /usr
 else
 # Use installation prefix from environment if set and non-empty.
-INSTALLPREFIX=${CWAUTOMACROSPREFIX}
+INSTALLPREFIX = ${CWAUTOMACROSPREFIX}
 endif
+
+LABEL := $(shell date +%Y%m%d)
 
 all:
 	@echo "Type 'make install' to install in $(INSTALLPREFIX)/share/cwautomacros."
 
 install:
 	install -d $(INSTALLPREFIX)/share/cwautomacros
+	install -m 644 version $(INSTALLPREFIX)/share/cwautomacros
 	install -d $(INSTALLPREFIX)/share/cwautomacros/m4
 	rm -f $(INSTALLPREFIX)/share/cwautomacros/m4/*.m4
+	cat m4/CW_AUTOMACROS.m4.in | sed -e 's/@VERSION@/$(LABEL)/' > m4/CW_AUTOMACROS.m4
 	install -m 644 m4/*.m4 $(INSTALLPREFIX)/share/cwautomacros/m4
 	install -d $(INSTALLPREFIX)/share/cwautomacros/scripts
 	for scripts in `ls scripts/*.sh`; do \

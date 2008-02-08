@@ -1,5 +1,5 @@
 # CW_AUTOMACROS m4 macro -- this file is part of cwautomacros.
-# Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
+# Copyright (C) 2006 - 2008 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,8 +28,10 @@ dnl CW_AUTOMACROS
 dnl Take care of general things needed.
 AC_DEFUN([CW_AUTOMACROS], [dnl
 dnl Check cwautomacros version.
-if test -n "$1" && test @VERSION@ < $1; then
-  AC_ERROR_MSG([cwautomacros version @VERSION@ or later is required.])
+minver=$1
+test -n "$minver" || minver=0
+if test @VERSION@ -lt $minver; then
+  AC_MSG_ERROR([cwautomacros version @VERSION@ or later is required.])
 fi
 dnl Detect unexpanded macros.
 m4_pattern_forbid(CW_)

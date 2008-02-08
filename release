@@ -1,10 +1,12 @@
 # Maintainer script (to make a new release).
 
 label=$(date +%Y%m%d)
+echo $label > version
 name="cwautomacros-$label"
 mkdir "$name" || exit 1
-files=$(svn stat --verbose --non-interactive | sed -re 's/.*[[:space:]]//')
-for f in $files; do
+cat m4/CW_AUTOMACROS.m4.in | sed -e 's/@VERSION@/'"$label"'/' > m4/CW_AUTOMACROS.m4
+files=$(svn stat --verbose --non-interactive | sed -re 's/.*[[:space:]]//' -e 's/\.m4\.in/.m4/')
+for f in version $files; do
   if test -f "$f"; then
     dir=$(dirname "$f")
     test -d "$name/$dir" || mkdir -p "$name/$dir"
