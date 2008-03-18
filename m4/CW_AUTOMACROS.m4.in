@@ -31,7 +31,7 @@ dnl Check cwautomacros version.
 minver=$1
 test -n "$minver" || minver=0
 if test @VERSION@ -lt $minver; then
-  AC_MSG_ERROR([cwautomacros version @VERSION@ or later is required.])
+  AC_MSG_ERROR([cwautomacros version $minver or later is required.])
 fi
 dnl Detect unexpanded macros.
 m4_pattern_forbid(CW_)

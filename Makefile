@@ -20,7 +20,9 @@ install:
 	install -m 644 version $(INSTALLPREFIX)/share/cwautomacros
 	install -d $(INSTALLPREFIX)/share/cwautomacros/m4
 	rm -f $(INSTALLPREFIX)/share/cwautomacros/m4/*.m4
-	cat m4/CW_AUTOMACROS.m4.in | sed -e 's/@VERSION@/$(LABEL)/' > m4/CW_AUTOMACROS.m4
+	if test -e m4/CW_AUTOMACROS.m4.in; then \
+	  cat m4/CW_AUTOMACROS.m4.in | sed -e 's/@VERSION@/$(LABEL)/' > m4/CW_AUTOMACROS.m4; \
+	fi
 	install -m 644 m4/*.m4 $(INSTALLPREFIX)/share/cwautomacros/m4
 	install -d $(INSTALLPREFIX)/share/cwautomacros/scripts
 	for scripts in `ls scripts/*.sh`; do \
