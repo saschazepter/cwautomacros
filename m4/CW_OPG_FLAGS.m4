@@ -149,6 +149,9 @@ AC_SUBST([DOXYGEN_DEBUG])
 # optimization flags, or -O2 when nothing was provided.
 if test x"$cw_config_optimize" != x"no"; then
   test -n "$CW_OPTIMISE_FLAGS" || CW_OPTIMISE_FLAGS="-O2"
+elif test "$ac_test_CXXFLAGS" != set; then
+  # If CXXFLAGS was set by configure, reset CW_OPTIMISE_FLAGS.
+  CW_OPTIMISE_FLAGS=
 fi
 
 # Handle cw_config_profile.
