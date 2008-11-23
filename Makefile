@@ -17,7 +17,8 @@ all:
 
 install:
 	install -d $(INSTALLPREFIX)/share/cwautomacros
-	install -m 644 version $(INSTALLPREFIX)/share/cwautomacros
+	echo "$(LABEL)" > $(INSTALLPREFIX)/share/cwautomacros/version
+	chmod 644 $(INSTALLPREFIX)/share/cwautomacros/version
 	install -d $(INSTALLPREFIX)/share/cwautomacros/m4
 	rm -f $(INSTALLPREFIX)/share/cwautomacros/m4/*.m4
 	if test -e m4/CW_AUTOMACROS.m4.in; then \

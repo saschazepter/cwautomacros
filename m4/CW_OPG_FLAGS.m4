@@ -120,7 +120,7 @@ esac
 # Handle cw_config_libcwd.
 # Check if we have libcwd, $cw_config_libcwd can be "yes", "no" or "".
 if test -z "$cw_used_libcwd"; then
-CW_LIB_LIBCWD([libcwd], [$cw_config_libcwd], [no])
+CW_LIB_LIBCWD([libcwd], [$cw_config_libcwd], [both])
 fi
 USE_LIBCWD="$cw_used_libcwd"
 AC_SUBST([USE_LIBCWD])

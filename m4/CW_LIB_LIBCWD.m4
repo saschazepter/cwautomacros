@@ -37,8 +37,12 @@
 # AC_ARG_ENABLE(debugging, [  --enable-debugging      enable debugging code.])
 # Where OPTIONNAME is [debugging] and WANTED is [$enable_debugging].
 #
-# THREADED can be [yes] or [no] when the application is threaded
-# or non-threaded respectively.
+# THREADED can be [yes], [no] or [both] when the application is
+# threaded, non-threaded or when both are needed respectively.
+# If THREADED is set to [both] then CWD_FLAGS and CWD_LIBS
+# are set as appropriate for the non-threaded case and
+# CWD_R_FLAGS and CWD_R_LIBS are set as appropriate for
+# the threaded case.
 #
 # This macro tests for the usability of libcwd and sets the macro
 # `cw_used_libcwd' to "yes" when it is detected, "no" otherwise.
@@ -66,11 +70,22 @@ else
   AC_LINK_IFELSE([AC_LANG_CALL([], [__libcwd_version])], [cw_cv_lib_libcwd=yes], [cw_cv_lib_libcwd=no])
   LIBS="$cw_save_LIBS"
   AC_LANG_RESTORE])
+  if test "$3" = "both"; then
+    AC_CACHE_CHECK([if libcwd_r is available], cw_cv_lib_libcwd_r,
+[    # Check if we have libcwd_r
+    AC_LANG_SAVE
+    AC_LANG_CPLUSPLUS
+    cw_save_LIBS="$LIBS"
+    LIBS="$LIBS `pkg-config --libs libcwd_r`"
+    AC_LINK_IFELSE([AC_LANG_CALL([], [__libcwd_version])], [cw_cv_lib_libcwd_r=yes], [cw_cv_lib_libcwd_r=no])
+    LIBS="$cw_save_LIBS"
+    AC_LANG_RESTORE])
+  fi
   cw_use_libcwd="$cw_wanted"
   test -n "$cw_use_libcwd" || cw_use_libcwd=auto
   test "$cw_use_libcwd" = "auto" && cw_use_libcwd=$cw_cv_lib_libcwd
   if test "$cw_use_libcwd" = "yes"; then
-    if test "$cw_cv_lib_libcwd" = "no"; then
+    if test "$cw_cv_lib_libcwd" = "no" -o "$3" = "both" -a x"$cw_cv_lib_libcwd_r" = x"no"; then
       m4_default([$5], [dnl
       AC_MSG_ERROR([
   --enable-$1: You need to have libcwd installed to enable this.
@@ -78,9 +93,19 @@ else
   PKG_CONFIG_PATH=/opt/install/lib/pkgconfig LD_LIBRARY_PATH=/opt/install/lib ./configure])])
     else
       cw_used_libcwd=yes
-      m4_default([$4], [dnl
-      CWD_FLAGS="`pkg-config --cflags lib$cw_libname`"
-      CWD_LIBS="`pkg-config --libs lib$cw_libname`"])
+      if test "$3" = "both"; then
+	m4_default([$4], [dnl
+	CWD_FLAGS="`pkg-config --cflags libcwd`"
+	CWD_LIBS="`pkg-config --libs libcwd`"
+	CWD_R_FLAGS="`pkg-config --cflags libcwd_r`"
+	CWD_R_LIBS="`pkg-config --libs libcwd_r`"])
+	AC_SUBST(CWD_R_FLAGS)
+	AC_SUBST(CWD_R_LIBS)
+      else
+	m4_default([$4], [dnl
+	CWD_FLAGS="`pkg-config --cflags lib$cw_libname`"
+	CWD_LIBS="`pkg-config --libs lib$cw_libname`"])
+      fi
       AC_SUBST(CWD_FLAGS)
       AC_SUBST(CWD_LIBS)
     fi
