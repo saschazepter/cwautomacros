@@ -52,8 +52,9 @@ elif test "$cw_cv_lib_boost_toolset" = "not found" -a -n "$BOOST_ROOT" -a -n "$B
   dnl The double [[...]] below are needed to escape m4, it will result in [...] in the configure script.
   cw_cv_lib_boost_toolset="`ls "$BOOST_ROOT"/lib/libboost* 2>/dev/null | \
       egrep '.*-'$BOOST_VERSION'\.(so$|so\.|a$|dll$|lib$)' | \
-      sed -e 's%.*/libboost_[[^/-]]*-\([[^./-]]*\).*%\1%' | \
-      sort -u`"
+      sed -r -e 's%.*/libboost_[[^/-]]*-([[^./-]]*).*-'$BOOST_VERSION'\.(so|so\..*|a|dll|lib)$%\1%' | \
+      egrep -v '(^mt$|libboost_)' | sort -u`"
+  test -n "$cw_cv_lib_boost_toolset" || cw_cv_lib_boost_toolset="none"
 fi
 ])
 if test "$cw_cv_lib_boost_toolset" = "not found"; then
