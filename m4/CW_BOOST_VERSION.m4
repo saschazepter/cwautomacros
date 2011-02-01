@@ -1,5 +1,5 @@
 # CW_BOOST_VERSION m4 macro -- this file is part of cwautomacros.
-# Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
+# Copyright (C) 2006, 2011 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,7 +52,8 @@ if test -z "$cw_cv_lib_boost_version" -a -n "$BOOST_ROOT"; then
 	  -e 's/.*\.so\.\([[0-9]]*\.[[0-9]]*\)\.[[0-9]]*$/\1/' \
 	  -e 's/.*\.so\.\([[0-9]]*\.[[0-9]]*\)$/\1/' \
 	  -e 's/\([[0-9]]\)*\([[._]]\)\([[0-9]]*\)/\1_\3 \1\2\3/' \
-	  -e 's/_/_000/' -e 's/_[[0-9]]*\(....\) /_\1 /' | \
+	  -e 's/_/_000/' -e 's/_[[0-9]]*\(....\) /_\1 /' \
+	  -e 's/_/./' | \
       sort -nu | tail -n 1 | sed -e 's/.* //'`"
 fi
 ])

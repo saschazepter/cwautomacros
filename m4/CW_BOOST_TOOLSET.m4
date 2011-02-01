@@ -1,5 +1,5 @@
 # CW_BOOST_TOOLSET m4 macro -- this file is part of cwautomacros.
-# Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
+# Copyright (C) 2006, 2011 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
